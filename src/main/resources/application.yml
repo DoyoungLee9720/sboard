@@ -13,13 +13,16 @@ logging:
                         bind: trace
                 sql: debug
         root: info
+
 server:
     port: 8081
     servlet:
         context-path: /sboard
+
 spring:
     application:
         name: sboard
+        version: 0.0.1
     datasource:
         driver-class-name: com.mysql.cj.jdbc.Driver
         password: 1234
