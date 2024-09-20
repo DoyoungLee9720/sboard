@@ -53,7 +53,7 @@ jobs:
           ssh -i private_key.pem \
             -o StrictHostKeyChecking=no \
             ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }} << 'EOF'
-            pgrep java | xargs kill -9
+            pgrep java | xargs kill -9;
             nohup java -jar /home/${{ secrets.AWS_EC2_USER }}/${{ env.JAR_FILE }} > app.log 2>&1 &
           EOF
       - name: Cleanup
