@@ -1,5 +1,6 @@
 package com.sboard.controller;
 
+import com.sboard.config.AppInfo;
 import com.sboard.dto.TermsDTO;
 import com.sboard.dto.UserDTO;
 import com.sboard.entity.User;
@@ -26,12 +27,11 @@ public class UserController {
     private final UserService userService;
     private final TermsService termsService;
     private String checkEmailnumber;
+    private final AppInfo appinfo;
 
-    @Value("${spring.application.version}")
-    private String appVersion;
     @GetMapping("/user/login")
     public String login(Model model){
-        model.addAttribute("appVersion", appVersion);
+        model.addAttribute("appinfo", appinfo);
         return "/user/login";
     }
 
