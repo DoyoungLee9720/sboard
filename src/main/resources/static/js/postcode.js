@@ -38,10 +38,17 @@ function postcode() {
             }
 
             // 우편번호와 주소 정보를 해당 필드에 넣는다.
-            document.getElementById('zip').value = data.zonecode;
-            document.getElementById("addr1").value = addr;
-            // 커서를 상세주소 필드로 이동한다.
-            document.getElementById("addr2").focus();
+            // 'zip' input 요소 선택
+            const zipInput = document.getElementsByName('zip')[0];
+            zipInput.value = data.zonecode;
+
+            // 'addr1' input 요소 선택
+            const addr1Input = document.getElementsByName('addr1')[0];
+            addr1Input.value = addr;
+
+            // 'addr2' input 요소 선택하고 포커스
+            const addr2Input = document.getElementsByName('addr2')[0];
+            addr2Input.focus();
         }
     }).open();
 }

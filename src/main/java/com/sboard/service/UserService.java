@@ -50,49 +50,51 @@ public class UserService {
                 return userRepository.existsByNick(value);
             case "email":
                 return userRepository.existsByEmail(value);
+            case "hp" :
+                return userRepository.existsByHp(value);
             default:
                 throw new IllegalArgumentException("Invalid type: " + type);
         }
     }
-//    public String sendEmailCode(String email) {
-//        // 인증코드 생성
-//        int code = ThreadLocalRandom.current().nextInt(100000, 1000000);
-//
-//        // 이메일 기본정보
-//        String title = "jboard 인증번호 입니다.";
-//        String content = "<h1>인증코드는 " + code + "입니다.</h1>";
-//        String sender = "dlehdud224@gmail.com";
-//        String appPass = "andx arrh lzjz srlc"; // Google 앱 비밀번호
-//
-//        // gmail SMTP 설정
-//        Properties props = new Properties();
-//        props.put("mail.smtp.host", "smtp.gmail.com");
-//        props.put("mail.smtp.port", "465");
-//        props.put("mail.smtp.auth", "true");
-//        props.put("mail.smtp.ssl.enable", "true");
-//        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
-//
-//        // gmail session 생성
-//        Session gmailSession = Session.getInstance(props, new Authenticator(){
-//            @Override
-//            protected javax.mail.PasswordAuthentication getPasswordAuthentication(){
-//                return new PasswordAuthentication(sender, appPass);
-//            }
-//        });
-//
-//        // 메일 발송
-//        Message message = new MimeMessage(gmailSession);
-//
-//        try{
-//            message.setFrom(new InternetAddress(sender, "보내는사람", "UTF-8"));
-//            message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
-//            message.setSubject(title);
-//            message.setContent(content, "text/html;charset=utf-8");
-//            Transport.send(message);
-//        }catch(Exception e){
-//            e.printStackTrace();
-//        }
-//
-//        return ""+code;
-//    }
+    public String sendEmailCode(String email) {
+        // 인증코드 생성
+        int code = ThreadLocalRandom.current().nextInt(100000, 1000000);
+
+        // 이메일 기본정보
+        String title = "jboard 인증번호 입니다.";
+        String content = "<h1>인증코드는 " + code + "입니다.</h1>";
+        String sender = "dlehdud224@gmail.com";
+        String appPass = "andx arrh lzjz srlc"; // Google 앱 비밀번호
+
+        // gmail SMTP 설정
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "465");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.ssl.enable", "true");
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+
+        // gmail session 생성
+        Session gmailSession = Session.getInstance(props, new Authenticator(){
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication(){
+                return new PasswordAuthentication(sender, appPass);
+            }
+        });
+
+        // 메일 발송
+        Message message = new MimeMessage(gmailSession);
+
+        try{
+            message.setFrom(new InternetAddress(sender, "보내는사람", "UTF-8"));
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
+            message.setSubject(title);
+            message.setContent(content, "text/html;charset=utf-8");
+            Transport.send(message);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return ""+code;
+    }
 }

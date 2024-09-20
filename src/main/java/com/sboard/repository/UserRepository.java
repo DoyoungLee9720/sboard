@@ -12,4 +12,6 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, String> {
     boolean existsByNick(String nick);
     boolean existsByEmail(String email);
+    boolean existsByHp(String hp);
+    public User findUserByUidAndPass(String uid, String name);
 }

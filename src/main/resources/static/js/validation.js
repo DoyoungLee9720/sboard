@@ -165,6 +165,7 @@ window.onload = function(){
 				resultEmail.innerText = '이미 사용중인 이메일 입니다.';
 				resultEmail.style.color = 'red';
 				isEmailOk = false;
+				preventDblClick = false;
 			}else{
 				resultEmail.innerText = '이메일 인증코드를 확인 하세요.';
 				resultEmail.style.color = 'green';
@@ -177,24 +178,26 @@ window.onload = function(){
 		}
 	}
 
-	btnAuthEmail.onclick = function(){
-
+	btnAuthEmail.onclick = function() {
 		const code = registerForm.auth.value;
 
-		fetch('/jboard/user/checkUser.do', {
-				method: 'POST',
-				body: JSON.stringify({"code":code})
-			})
+		fetch('/sboard/checkemail', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'  // Content-Type을 설정
+			},
+			body: JSON.stringify({"code": code})
+		})
 			.then(resp => resp.json())
 			.then(data => {
 				console.log(data);
 
-				if(data.result > 0){
+				if (data.result > 0) {
 					resultEmail.innerText = '이메일이 인증되었습니다.';
 					resultEmail.style.color = 'green';
 					isEmailOk = true;
-				}else{
-					resultEmail.innerText = '유효한 인증코드가 않습니다.';
+				} else {
+					resultEmail.innerText = '유효한 인증코드가 아닙니다.';
 					resultEmail.style.color = 'red';
 					isEmailOk = false;
 				}
@@ -203,71 +206,71 @@ window.onload = function(){
 				console.log(err);
 			});
 	}
-	//
-	// // 6.휴대폰 유효성 검사
-	// registerForm.hp.addEventListener('focusout', async function(){
-	//
-	// 	const hp = registerForm.hp.value;
-	//
-	// 	try{
-	// 		const response = await fetch('/jboard/user/checkUser.do?type=hp&value='+hp);
-	// 		const data = await response.json();
-	// 		console.log(data);
-	//
-	// 		if(data.result > 0){
-	// 			resultHp.innerText = '이미 사용중인 휴대폰번호 입니다.';
-	// 			resultHp.style.color = 'red';
-	// 			isHpOk = false;
-	// 		}else{
-	// 			resultHp.innerText = '';
-	// 			isHpOk = true;
-	// 		}
-	//
-	// 	}catch(err){
-	// 		console.log(err);
-	// 	}
-	// });
-	//
-	//
-	// // 최종 폼 전송 유효성 검사
-	// registerForm.onsubmit = function(){
-	//
-	// 	// 아이디 유효성 검사 완료 여부
-	// 	if(!isUidOk){
-	// 		alert('아이디가 유효하지 않습니다.');
-	// 		return false; // 폼 전송 취소
-	// 	}
-	//
-	// 	// 비밀번호 유효성 검사 완료 여부
-	// 	if(!isPassOk){
-	// 		alert('비밀번호가 유효하지 않습니다.');
-	// 		return false; // 폼 전송 취소
-	// 	}
-	//
-	// 	// 이름 유효성 검사 완료 여부
-	// 	if(!isNameOk){
-	// 		alert('이름이 유효하지 않습니다.');
-	// 		return false; // 폼 전송 취소
-	// 	}
-	//
-	// 	// 별명 유효성 검사 완료 여부
-	// 	if(!isNickOk){
-	// 		alert('별명이 유효하지 않습니다.');
-	// 		return false; // 폼 전송 취소
-	// 	}
-	//
-	// 	// 이메일 유효성 검사 완료 여부
-	// 	if(!isEmailOk){
-	// 		alert('이메일이 유효하지 않습니다.');
-	// 		return false; // 폼 전송 취소
-	// 	}
-	//
-	// 	// 휴대폰 유효성 검사 완료 여부
-	// 	if(!isHpOk){
-	// 		alert('휴대폰 번호가 유효하지 않습니다.');
-	// 		return false; // 폼 전송 취소
-	// 	}
-	//
-	// 	return true; // 폼 전송
-	// }
+
+	// 6.휴대폰 유효성 검사
+	registerForm.hp.addEventListener('focusout', async function(){
+
+		const hp = registerForm.hp.value;
+
+		try{
+			const response = await fetch('/sboard/check?type=hp&value='+hp);
+			const data = await response.json();
+			console.log(data);
+
+			if(data.result > 0){
+				resultHp.innerText = '이미 사용중인 휴대폰번호 입니다.';
+				resultHp.style.color = 'red';
+				isHpOk = false;
+			}else{
+				resultHp.innerText = '';
+				isHpOk = true;
+			}
+
+		}catch(err){
+			console.log(err);
+		}
+	});
+
+
+	// 최종 폼 전송 유효성 검사
+	registerForm.onsubmit = function(){
+
+		// 아이디 유효성 검사 완료 여부
+		if(!isUidOk){
+			alert('아이디가 유효하지 않습니다.');
+			return false; // 폼 전송 취소
+		}
+
+		// 비밀번호 유효성 검사 완료 여부
+		if(!isPassOk){
+			alert('비밀번호가 유효하지 않습니다.');
+			return false; // 폼 전송 취소
+		}
+
+		// 이름 유효성 검사 완료 여부
+		if(!isNameOk){
+			alert('이름이 유효하지 않습니다.');
+			return false; // 폼 전송 취소
+		}
+
+		// 별명 유효성 검사 완료 여부
+		if(!isNickOk){
+			alert('별명이 유효하지 않습니다.');
+			return false; // 폼 전송 취소
+		}
+
+		// 이메일 유효성 검사 완료 여부
+		if(!isEmailOk){
+			alert('이메일이 유효하지 않습니다.');
+			return false; // 폼 전송 취소
+		}
+
+		// 휴대폰 유효성 검사 완료 여부
+		if(!isHpOk){
+			alert('휴대폰 번호가 유효하지 않습니다.');
+			return false; // 폼 전송 취소
+		}
+
+		return true; // 폼 전송
+	}
 }
