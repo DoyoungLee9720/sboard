@@ -1,12 +1,16 @@
 package com.sboard.config;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.beans.factory.annotation.Value;
 
 @Getter
 @Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class AppInfo {
+
     @Value("${spring.application.name}")
     private String appName;
 

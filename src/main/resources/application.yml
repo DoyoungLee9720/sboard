@@ -19,10 +19,11 @@ server:
     servlet:
         context-path: /sboard
 
+
 spring:
     application:
         name: sboard
-        version: 0.0.3
+        version: 0.0.2
     datasource:
         driver-class-name: com.mysql.cj.jdbc.Driver
         password: Ldy620lth106@
@@ -41,6 +42,10 @@ spring:
             hibernate:
                 format_sql: true
                 show_sql: true
+    servlet:
+      multipart:
+          location: uploads/
+          max-file-size: 10MB
 
     thymeleaf:
         prefix: classpath:/templates

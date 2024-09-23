@@ -30,8 +30,7 @@ public class UserController {
     private final AppInfo appinfo;
 
     @GetMapping("/user/login")
-    public String login(Model model){
-        model.addAttribute("appinfo", appinfo);
+    public String login(){
         return "/user/login";
     }
 
