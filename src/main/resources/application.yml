@@ -23,11 +23,11 @@ server:
 spring:
     application:
         name: sboard
-        version: 0.0.2
+        
     datasource:
         driver-class-name: com.mysql.cj.jdbc.Driver
-        password: Ldy620lth106@
-        url: jdbc:mysql://43.201.84.168:3306/jboard
+        password: 1234
+        url: jdbc:mysql://localhost:3306/jboard
         username: root
     devtools:
         livereload:
@@ -49,3 +49,6 @@ spring:
 
     thymeleaf:
         prefix: classpath:/templates
+
+ext:
+    version: ${ext.version}

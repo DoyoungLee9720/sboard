@@ -4,11 +4,14 @@ package com.sboard.controller;
 import com.sboard.config.AppInfo;
 import com.sboard.dto.ArticleDTO;
 import com.sboard.dto.FileDTO;
+import com.sboard.dto.PageRequestDTO;
+import com.sboard.dto.PageResponseDTO;
 import com.sboard.service.ArticleService;
 import com.sboard.service.FileService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +28,15 @@ public class ArticleController {
     private final FileService fileService;
 
     @GetMapping("/article/list")
-    public String list() {
+    public String list(Model model, PageRequestDTO pageRequestDTO) {
+
+        PageResponseDTO pageResponseDTO = articleService.selectArticleAll(pageRequestDTO);
+        model.addAttribute(pageResponseDTO);
+        //검색 글 목록 조회
+
+        model.addAttribute("currentpage", pageRequestDTO.getPg());
+
+
         return "/article/list";
     }
 
