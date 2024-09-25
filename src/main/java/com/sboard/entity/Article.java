@@ -40,10 +40,10 @@ public class Article {
     private String nick;
 
 
-    @OneToMany(mappedBy = "ano") // mappedBy는 매핑되는 엔티티(테이블)의 FK 컬럼
+    @OneToMany(mappedBy = "ano",fetch = FetchType.EAGER) // mappedBy는 매핑되는 엔티티(테이블)의 FK 컬럼
     private List<FileEntity> fileList;
 
-    @OneToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parent",fetch = FetchType.EAGER)
     private List<Comment> commentList;
     /*
         DTO 변환 메서드 대신 ModelMapper 사용

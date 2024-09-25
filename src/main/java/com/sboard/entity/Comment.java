@@ -27,7 +27,7 @@ public class Comment {
     @CreationTimestamp
     private LocalDateTime rdate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "writer")
     private User user;
 }
