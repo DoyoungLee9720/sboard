@@ -8,13 +8,23 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Log4j2
@@ -24,6 +34,7 @@ public class FileService {
 
     private final FileRepository fileRepository;
     private final ModelMapper modelMapper;
+
     @Value("${spring.servlet.multipart.location}")
     private String uploadPath;
 
@@ -69,8 +80,41 @@ public class FileService {
         return uploadedFiles;
     }
 
-    public void downloadFile(){
+    public ResponseEntity<Resource> downloadFile(int fno) {
+        Optional<FileEntity> optFile= fileRepository.findById(fno);
 
+        FileEntity fileEntity = null;
+
+        if(optFile.isPresent()){
+            fileEntity = optFile.get();
+
+            //파일 다운로드 카운트 +1
+            int count = fileEntity.getDownload();
+            fileEntity.setDownload(count+1);
+            fileRepository.save(fileEntity);
+        }
+
+        try {
+            Path path = Paths.get(uploadPath + fileEntity.getSName());
+            String contentType = Files.probeContentType(path);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentDisposition(
+                    ContentDisposition.builder("attachment")
+                            .filename(fileEntity.getOName(), StandardCharsets.UTF_8).build());
+
+            headers.add(HttpHeaders.CONTENT_TYPE, contentType);
+            Resource resource = new InputStreamResource(Files.newInputStream(path));
+
+            return ResponseEntity
+                    .ok()
+                    .headers(headers)
+                    .body(resource);
+        } catch (IOException e) {
+
+            return ResponseEntity
+                    .notFound().build();
+        }
     }
 
     public void insertFile(FileDTO fileDTO) {
@@ -80,7 +124,7 @@ public class FileService {
     public FileDTO selectFile(int fno){
         return null;
     }
-    public List<FileDTO> selectFileAll(){
+    public List<FileDTO> selectFileAll(int no){
         return null;
     }
     public void updateFile(FileDTO fileDTO){}

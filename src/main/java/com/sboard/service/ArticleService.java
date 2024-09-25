@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 public class ArticleService {
     private final ArticleRepository articleRepository;
     private final ModelMapper modelMapper;
+
     public int insertArticle(ArticleDTO articleDTO){
         // 첨부 파일 객체(MultipartFile) 가져오기
         List<MultipartFile> files = articleDTO.getFiles();
@@ -36,7 +37,23 @@ public class ArticleService {
         Article savedArticle = articleRepository.save(article);
         return savedArticle.getNo();
     }
+
     public ArticleDTO selectArticle(int no){
+        Optional<Article> optArticle  = articleRepository.findById(no);
+
+        if(optArticle.isPresent()){
+            Article article = optArticle.get();
+
+            //조회수 카운트 +1
+            int count = article.getHit();
+            article.setHit(count+1);
+            articleRepository.save(article);
+
+            log.info(article);
+
+            ArticleDTO dto = modelMapper.map(article, ArticleDTO.class);
+            return dto;
+        }
         return null;
     }
 
